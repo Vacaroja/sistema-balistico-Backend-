@@ -1,4 +1,4 @@
-package com.ccc.sistema_balistico.core.domain.model.enums;
+package com.ccc.sistema_balistico.entities.enums;
 
 public enum PercussionType {
     ANULAR,

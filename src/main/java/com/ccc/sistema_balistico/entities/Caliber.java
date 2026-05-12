@@ -1,4 +1,4 @@
-package com.ccc.sistema_balistico.core.domain.model;
+package com.ccc.sistema_balistico.entities;
 
 
 import jakarta.persistence.*;

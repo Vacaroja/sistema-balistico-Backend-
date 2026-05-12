@@ -1,8 +1,8 @@
-package com.ccc.sistema_balistico.core.domain.model;
+package com.ccc.sistema_balistico.entities;
 
 
-import com.ccc.sistema_balistico.core.domain.model.enums.PercussionType;
-import com.ccc.sistema_balistico.core.domain.model.enums.TwistDirection;
+import com.ccc.sistema_balistico.entities.enums.PercussionType;
+import com.ccc.sistema_balistico.entities.enums.TwistDirection;
 import jakarta.persistence.*;
 import lombok.*;
 
