@@ -16,9 +16,10 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Expedient {
+public class ExpedientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCaliber;
     private LocalDateTime createdAt;
+    private Boolean isDelete;
 }

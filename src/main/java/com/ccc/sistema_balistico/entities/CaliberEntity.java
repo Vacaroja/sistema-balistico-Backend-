@@ -11,13 +11,13 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Caliber {
+public class CaliberEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCaliber;
     private String name;
 
-    @OneToMany(mappedBy = "caliber")
-    private List<Bullet> bullets;
+    @OneToMany(mappedBy = "caliberEntity")
+    private List<BulletEntity> bulletEntities;
     private Boolean isDelete;
 }
