@@ -69,7 +69,7 @@ public class BulletController {
             description = "Modifica los datos de un proyectil ya registrado. Ideal para corregir información o actualizar el estado de la investigación."
     )
     @PutMapping("/{id}")
-    public ResponseEntity<BulletDTO> updateBullet(@PathVariable Long id,@Valid @Min(value = 0,message = "only id > 0") @RequestBody BulletDTO bulletDTO) {
+    public ResponseEntity<BulletDTO> updateBullet(@PathVariable @Min(value = 1,message = "only id > 0") Long id,@Valid @RequestBody BulletDTO bulletDTO) {
         BulletDTO bullet = bulletService.updateBullet(id, bulletDTO);
         return ResponseEntity.ok(bullet);
     }

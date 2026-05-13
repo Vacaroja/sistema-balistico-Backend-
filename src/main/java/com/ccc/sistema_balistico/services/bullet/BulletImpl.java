@@ -49,6 +49,7 @@ public class BulletImpl implements BulletService{
         CaliberEntity caliber = caliberRepository.findById(bulletDTO.getCaliber()).orElseThrow(()-> new CaliberNotFound("Caliber Not Found"));
         if (caliber.getIsDelete()) throw new CaliberIsDeleted();
 
+        bulletDTO.setIdBullet(null);
         bulletDTO.setCreatedAt(LocalDateTime.now());
 
         BulletEntity bulletEntity = BulletMapper.toEntity(bulletDTO,caliber);
