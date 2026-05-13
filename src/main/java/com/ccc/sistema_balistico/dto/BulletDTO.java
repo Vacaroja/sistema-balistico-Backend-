@@ -17,16 +17,17 @@ import java.time.LocalDateTime;
 public class BulletDTO {
 
     private Long idBullet;
+
     @NotNull(message = "Expedient Required")
     private String caseFile;
 
     @NotNull(message = "lands And Grooves Required")
     private Long landsAndGrooves;
 
-    @NotBlank(message = "Percussion Type Required")
+    @NotNull(message = "Percussion Type Required")
     private PercussionType percussionType;
 
-    @NotBlank(message = "Twist Direction Required")
+    @NotNull(message = "Twist Direction Required")
     private TwistDirection twistDirection;
 
     @NotNull(message = "Caliber Required")
