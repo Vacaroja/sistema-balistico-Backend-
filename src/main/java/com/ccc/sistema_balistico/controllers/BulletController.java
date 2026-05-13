@@ -7,9 +7,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.data.domain.Pageable;
@@ -19,6 +22,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("api/v1/bullet")
 @Tag(name = "Registro Balístico", description = "Endpoints para la gestión, seguimiento y análisis de evidencias balísticas")
+@Validated
 public class BulletController {
 
     @Autowired
@@ -44,6 +48,7 @@ public class BulletController {
     @GetMapping("/{id}")
     public ResponseEntity<BulletDTO> getBulletById(
             @Parameter(description = "ID único de la evidencia", example = "1")
+            @Min(value = 1, message = "only id > 0")
             @PathVariable Long id) {
         BulletDTO bulletDTO = bulletService.getBullet(id);
         return ResponseEntity.ok(bulletDTO);
@@ -54,7 +59,7 @@ public class BulletController {
             description = "Crea un nuevo registro de evidencia balistica en la base de datos, incluyendo calibre, fabricante y tipo de percusión."
     )
     @PostMapping
-    public ResponseEntity<BulletDTO> createdBullet(@RequestBody BulletDTO bulletDTO) {
+    public ResponseEntity<BulletDTO> createdBullet(@Valid @RequestBody BulletDTO bulletDTO) {
         BulletDTO bullet = bulletService.createBullet(bulletDTO);
         return ResponseEntity.created(URI.create("api/v1/bullet" + bullet.getIdBullet())).body(bullet);
     }
@@ -64,7 +69,7 @@ public class BulletController {
             description = "Modifica los datos de un proyectil ya registrado. Ideal para corregir información o actualizar el estado de la investigación."
     )
     @PutMapping("/{id}")
-    public ResponseEntity<BulletDTO> updateBullet(@PathVariable Long id, @RequestBody BulletDTO bulletDTO) {
+    public ResponseEntity<BulletDTO> updateBullet(@PathVariable Long id,@Valid @Min(value = 0,message = "only id > 0") @RequestBody BulletDTO bulletDTO) {
         BulletDTO bullet = bulletService.updateBullet(id, bulletDTO);
         return ResponseEntity.ok(bullet);
     }
