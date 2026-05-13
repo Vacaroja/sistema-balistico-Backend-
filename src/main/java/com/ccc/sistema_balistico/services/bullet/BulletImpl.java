@@ -17,6 +17,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
+
 @Service
 public class BulletImpl implements BulletService{
 
@@ -46,6 +48,9 @@ public class BulletImpl implements BulletService{
     public BulletDTO createBullet(BulletDTO bulletDTO) {
         CaliberEntity caliber = caliberRepository.findById(bulletDTO.getCaliber()).orElseThrow(()-> new CaliberNotFound("Caliber Not Found"));
         if (caliber.getIsDelete()) throw new CaliberIsDeleted();
+
+        bulletDTO.setCreatedAt(LocalDateTime.now());
+
         BulletEntity bulletEntity = BulletMapper.toEntity(bulletDTO,caliber);
         return BulletMapper.toDTO(bulletRepository.save(bulletEntity));
     }
