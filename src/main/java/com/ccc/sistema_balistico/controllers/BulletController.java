@@ -1,0 +1,83 @@
+package com.ccc.sistema_balistico.controllers;
+
+import com.ccc.sistema_balistico.dto.BulletDTO;
+import com.ccc.sistema_balistico.services.bullet.BulletService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Pageable;
+
+import java.net.URI;
+
+@RestController
+@RequestMapping("api/v1/bullet")
+@Tag(name = "Registro Balístico", description = "Endpoints para la gestión, seguimiento y análisis de evidencias balísticas")
+public class BulletController {
+
+    @Autowired
+    private BulletService bulletService;
+
+    @Operation(
+            summary = "Obtener evidencias paginadas",
+            description = "Retorna una página de evidencias balísticas. Permite gestionar grandes volúmenes de datos mediante parámetros de paginación."
+    )
+    @GetMapping
+    public ResponseEntity<Page<BulletDTO>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(bulletService.getAll(pageable));
+    }
+
+    @Operation(
+            summary = "Buscar evidencia por ID",
+            description = "Recupera los detalles técnicos de las evidencias registradas en el sistema."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Evidencia encontrada con éxito"),
+            @ApiResponse(responseCode = "404", description = "No se encontró ninguna evidencia con el ID proporcionado")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<BulletDTO> getBulletById(
+            @Parameter(description = "ID único de la evidencia", example = "1")
+            @PathVariable Long id) {
+        BulletDTO bulletDTO = bulletService.getBullet(id);
+        return ResponseEntity.ok(bulletDTO);
+    }
+
+    @Operation(
+            summary = "Registrar nueva evidencia",
+            description = "Crea un nuevo registro de evidencia balistica en la base de datos, incluyendo calibre, fabricante y tipo de percusión."
+    )
+    @PostMapping
+    public ResponseEntity<BulletDTO> createdBullet(@RequestBody BulletDTO bulletDTO) {
+        BulletDTO bullet = bulletService.createBullet(bulletDTO);
+        return ResponseEntity.created(URI.create("api/v1/bullet" + bullet.getIdBullet())).body(bullet);
+    }
+
+    @Operation(
+            summary = "Actualizar evidencia existente",
+            description = "Modifica los datos de un proyectil ya registrado. Ideal para corregir información o actualizar el estado de la investigación."
+    )
+    @PutMapping("/{id}")
+    public ResponseEntity<BulletDTO> updateBullet(@PathVariable Long id, @RequestBody BulletDTO bulletDTO) {
+        BulletDTO bullet = bulletService.updateBullet(id, bulletDTO);
+        return ResponseEntity.ok(bullet);
+    }
+
+    @Operation(
+            summary = "Eliminar (Borrado lógico) de evidencia",
+            description = "Marca un proyectil como eliminado en el sistema sin borrarlo físicamente de la base de datos (is_delete = true)."
+    )
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteBullet(@PathVariable Long id) {
+        bulletService.deleteBullet(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
+}
