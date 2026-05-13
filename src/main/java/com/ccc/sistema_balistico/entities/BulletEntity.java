@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Bullet {
+public class BulletEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,13 +32,13 @@ public class Bullet {
 
     @ManyToOne
     @JoinColumn(name = "id_caliber")
-    private Caliber caliber;
+    private CaliberEntity caliberEntity;
 
     private String manufacturer;
 
     private LocalDateTime createdAt;
 
-    private Boolean isDeleted;
+    private Boolean isDelete ;
 
 
 
