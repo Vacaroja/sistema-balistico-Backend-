@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +33,8 @@ public class BulletDTO {
 
     @NotNull(message = "Caliber Required")
     private Long caliber;
+
+    private String images;
 
     private String manufacturer;
 

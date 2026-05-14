@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -37,6 +38,9 @@ public class BulletEntity {
     private String manufacturer;
 
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "idBullet",orphanRemoval = true)
+    private List<BulletImagesEntity> imagePaths;
 
     private Boolean isDelete ;
 
