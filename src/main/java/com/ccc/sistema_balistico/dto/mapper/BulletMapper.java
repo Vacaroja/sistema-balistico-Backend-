@@ -2,6 +2,7 @@ package com.ccc.sistema_balistico.dto.mapper;
 
 import com.ccc.sistema_balistico.dto.BulletDTO;
 import com.ccc.sistema_balistico.entities.BulletEntity;
+import com.ccc.sistema_balistico.entities.BulletImagesEntity;
 import com.ccc.sistema_balistico.entities.CaliberEntity;
 
 public class BulletMapper {
@@ -15,10 +16,13 @@ public class BulletMapper {
                 caliber(bulletEntity.getCaliberEntity().getIdCaliber()).
                 manufacturer(bulletEntity.getManufacturer()).
                 createdAt(bulletEntity.getCreatedAt()).
+                images(bulletEntity.getImagePaths().stream().map(BulletImagesEntity::getPathImage).toList()).
                 build();
+
 
     }
     public static BulletEntity toEntity(BulletDTO bulletEntity, CaliberEntity caliberEntity){
+
         return BulletEntity.builder().
                 idBullet(bulletEntity.getIdBullet()).
                 caseFile(bulletEntity.getCaseFile()).
@@ -27,7 +31,7 @@ public class BulletMapper {
                 twistDirection(bulletEntity.getTwistDirection()).
                 caliberEntity(caliberEntity).
                 manufacturer(bulletEntity.getManufacturer()).
-                createdAt(bulletEntity.getCreatedAt()).
+                createdAt(bulletEntity.getCreatedAt()).isDelete(false).
                 build();
 
     }

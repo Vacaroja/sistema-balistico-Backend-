@@ -2,12 +2,11 @@ package com.ccc.sistema_balistico.dto;
 
 import com.ccc.sistema_balistico.entities.enums.PercussionType;
 import com.ccc.sistema_balistico.entities.enums.TwistDirection;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -32,6 +31,8 @@ public class BulletDTO {
 
     @NotNull(message = "Caliber Required")
     private Long caliber;
+
+    private List<String> images;
 
     private String manufacturer;
 
