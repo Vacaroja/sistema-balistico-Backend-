@@ -10,14 +10,16 @@ import com.ccc.sistema_balistico.exceptions.custom.caliber.CaliberIsDeleted;
 import com.ccc.sistema_balistico.exceptions.custom.caliber.CaliberNotFound;
 import com.ccc.sistema_balistico.repositories.bullet.BulletRepository;
 import com.ccc.sistema_balistico.repositories.caliber.CaliberRepository;
+import com.ccc.sistema_balistico.services.bulletimg.BulletImagesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class BulletImpl implements BulletService{
@@ -26,6 +28,8 @@ public class BulletImpl implements BulletService{
     BulletRepository bulletRepository;
     @Autowired
     CaliberRepository caliberRepository;
+    @Autowired
+    BulletImagesService bulletImagesService;
 
 
     @Transactional(readOnly = true)
@@ -45,15 +49,15 @@ public class BulletImpl implements BulletService{
 
     @Transactional
     @Override
-    public BulletDTO createBullet(BulletDTO bulletDTO) {
+    public BulletDTO createBullet(BulletDTO bulletDTO, List<MultipartFile> files) {
         CaliberEntity caliber = caliberRepository.findById(bulletDTO.getCaliber()).orElseThrow(()-> new CaliberNotFound("Caliber Not Found"));
         if (caliber.getIsDelete()) throw new CaliberIsDeleted();
-
         bulletDTO.setIdBullet(null);
         bulletDTO.setCreatedAt(LocalDateTime.now());
-
         BulletEntity bulletEntity = BulletMapper.toEntity(bulletDTO,caliber);
-        return BulletMapper.toDTO(bulletRepository.save(bulletEntity));
+        bulletEntity = bulletRepository.save(bulletEntity);
+
+        return bulletImagesService.saveImageList(files,bulletEntity);
     }
 
     @Transactional

@@ -1,10 +1,13 @@
 package com.ccc.sistema_balistico.services.storage;
 
 import com.ccc.sistema_balistico.exceptions.custom.storage.FileTooLargeException;
+import com.ccc.sistema_balistico.exceptions.custom.storage.ImageNotFoundException;
 import jakarta.annotation.PostConstruct;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +53,37 @@ public class FileStorageImpl implements FileStorageService {
             return newFileName;
         } catch (IOException e) {
             throw new RuntimeException("Error uploading the file " + e);
+        }
+    }
+
+
+    @Override
+    public Resource loadImageFile(String img) {
+        try {
+            Path file = rootLocation.resolve(img);
+            Resource resource = new UrlResource(file.toUri());
+            if (resource.exists() || resource.isReadable()) {
+                return resource;
+            } else {
+                throw new ImageNotFoundException("Image Not Found: " + img);
+            }
+
+        } catch (IOException e) {
+            throw new ImageNotFoundException("URL not valid");
+        }
+    }
+
+    @Override
+    public String getContentType(String path) {
+        Path file = rootLocation.resolve(path);
+
+        try {
+            String contentType = Files.probeContentType(file);
+            if (contentType == null) contentType = "application/octet-stream";
+
+            return contentType;
+        } catch (IOException e) {
+            throw new ImageNotFoundException("URL not valid");
         }
     }
 

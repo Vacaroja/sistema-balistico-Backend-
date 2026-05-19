@@ -17,7 +17,7 @@ public class BulletImagesEntity {
     private UUID uuidBulletImages;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_caliber")
+    @JoinColumn(name = "id_bullet")
     private BulletEntity idBullet;
 
     private String pathImage;

@@ -1,6 +1,7 @@
 package com.ccc.sistema_balistico.controllers;
 
 import com.ccc.sistema_balistico.dto.BulletDTO;
+import com.ccc.sistema_balistico.dto.ImageDTO;
 import com.ccc.sistema_balistico.services.bullet.BulletService;
 import com.ccc.sistema_balistico.services.bulletimg.BulletImagesService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,7 +12,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -21,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/v1/bullet")
@@ -72,11 +76,9 @@ public class BulletController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BulletDTO> createdBullet(
             @Valid @ModelAttribute BulletDTO bulletDTO,
-            @Parameter(description = "Archivo de imagen de la evidencia (JPG, PNG)")
-            @RequestParam("file") MultipartFile file) {
-        BulletDTO bullet = bulletService.createBullet(bulletDTO);
-        String image = bulletImagesService.saveImage(file, bullet.getIdBullet());
-        bullet.setImages(image);
+            @Parameter(description = "Archivo de imagen de la evidencia (JPG,PNG,JPEG)")
+            @RequestParam("file") List<MultipartFile> fileList) {
+        BulletDTO bullet = bulletService.createBullet(bulletDTO,fileList);
         return ResponseEntity.created(URI.create("api/v1/bullet" + bullet.getIdBullet())).body(bullet);
     }
 
@@ -100,5 +102,23 @@ public class BulletController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/images/{filePath}")
+    @Operation(summary = "Visualizar una imagen de evidencia en el navegador")
+    public ResponseEntity<Resource> getBulletImage(@PathVariable String filePath) {
+        ImageDTO file = bulletImagesService.loadImage(filePath);
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.contentType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + file.img().getFilename() + "\"")
+                .body(file.img());
+    }
+
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/{id}/images")
+    @Operation(summary = "Visualizar una imagen de evidencia en el navegador")
+    public ResponseEntity<BulletDTO> addBulletImages(@PathVariable Long id,
+                                                    @RequestParam("file") List<MultipartFile> file) {
+        BulletDTO bulletDTO = bulletImagesService.saveImageList(file,id);
+        return ResponseEntity.ok(bulletDTO);
+    }
 
 }

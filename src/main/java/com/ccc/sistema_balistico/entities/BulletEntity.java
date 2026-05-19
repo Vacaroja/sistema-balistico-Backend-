@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,7 +32,7 @@ public class BulletEntity {
     @Enumerated(EnumType.STRING)
     private TwistDirection twistDirection;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_caliber")
     private CaliberEntity caliberEntity;
 
@@ -39,10 +40,11 @@ public class BulletEntity {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "idBullet",orphanRemoval = true)
-    private List<BulletImagesEntity> imagePaths;
+    @Builder.Default
+    @OneToMany(mappedBy = "idBullet", cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<BulletImagesEntity> imagePaths = new ArrayList<>();
 
-    private Boolean isDelete ;
+    private Boolean isDelete = false ;
 
 
 
