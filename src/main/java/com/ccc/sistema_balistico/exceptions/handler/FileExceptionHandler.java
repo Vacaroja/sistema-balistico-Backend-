@@ -1,6 +1,7 @@
 package com.ccc.sistema_balistico.exceptions.handler;
 
 import com.ccc.sistema_balistico.exceptions.custom.storage.FileTooLargeException;
+import com.ccc.sistema_balistico.exceptions.custom.storage.ImageNotFoundException;
 import org.apache.tomcat.util.http.fileupload.FileUploadException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,20 @@ import java.time.LocalDateTime;
 
 @RestControllerAdvice
 public class FileExceptionHandler {
+    @ExceptionHandler(ImageNotFoundException.class)
+    public ResponseEntity<ApiErrorResponse> handleImageNotFoundException(ImageNotFoundException ex, WebRequest request) {
+
+
+        ApiErrorResponse apiError = ApiErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.NOT_FOUND.value())
+                .error("File Not Found [NOT_FOUND]")
+                .message("File Not Found")
+                .path(request.getDescription(false))
+                .build();
+
+        return new ResponseEntity<>(apiError,HttpStatus.CONTENT_TOO_LARGE);
+    }
     @ExceptionHandler(FileTooLargeException.class)
     public ResponseEntity<ApiErrorResponse> handleFileTooLargeException(FileTooLargeException ex, WebRequest request) {
 
