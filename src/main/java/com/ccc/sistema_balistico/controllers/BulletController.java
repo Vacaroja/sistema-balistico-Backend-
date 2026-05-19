@@ -114,7 +114,7 @@ public class BulletController {
     }
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE, path = "/{id}/images")
-    @Operation(summary = "Visualizar una imagen de evidencia en el navegador")
+    @Operation(summary = "Añadir imagen a evidencia ya creada")
     public ResponseEntity<BulletDTO> addBulletImages(@PathVariable Long id,
                                                     @RequestParam("file") List<MultipartFile> file) {
         BulletDTO bulletDTO = bulletImagesService.saveImageList(file,id);
